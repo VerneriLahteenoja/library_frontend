@@ -1,8 +1,12 @@
-const Authors = (props) => {
-  if (!props.show) {
-    return null
-  }
-  const authors = []
+import { useState } from "react";
+
+const Authors = ({ authors }) => {
+  const [name, setName] = useState("");
+  const [born, setBorn] = useState("");
+
+  const submit = (event) => {
+    event.preventDefault();
+  };
 
   return (
     <div>
@@ -23,8 +27,28 @@ const Authors = (props) => {
           ))}
         </tbody>
       </table>
+      <h3>Set birthyear</h3>
+      <div>
+        <form onSubmit={submit}>
+          name
+          <input
+            type='text'
+            value={name}
+            onChange={({ target }) => setName(target.value)}
+          ></input>
+          <br />
+          born
+          <input
+            type='number'
+            value={born}
+            onChange={({ target }) => setBorn(target.value)}
+          ></input>
+          <br />
+          <button type='submit'>update author</button>
+        </form>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default Authors
+export default Authors;
