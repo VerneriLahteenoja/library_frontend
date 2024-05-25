@@ -1,11 +1,16 @@
 import { useState } from "react";
+import { useMutation } from "@apollo/client";
+import { UPDATE_AUTHOR } from "../queries";
 
 const Authors = ({ authors }) => {
   const [name, setName] = useState("");
   const [born, setBorn] = useState("");
 
+  const [changeBorn] = useMutation(UPDATE_AUTHOR);
+
   const submit = (event) => {
     event.preventDefault();
+    changeBorn({ variables: { name, born: Number(born) } });
   };
 
   return (

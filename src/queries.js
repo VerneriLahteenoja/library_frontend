@@ -43,7 +43,7 @@ export const UPDATE_AUTHOR = gql`
 	{
 		editAuthor(
 			name: $name,
-			born: $born
+			setBornTo: $born
 		) {
 			name,
 			born
