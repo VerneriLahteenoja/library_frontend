@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const LoginForm = () => {
+const LoginForm = ({ setLoggedIn, setPage }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -8,6 +8,8 @@ const LoginForm = () => {
     event.preventDefault();
     // Add token handling
     console.log("login clicked");
+    setLoggedIn(true);
+    setPage("authors");
   };
 
   return (
