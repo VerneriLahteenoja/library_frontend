@@ -3,7 +3,7 @@ import { useMutation } from "@apollo/client";
 import Select from "react-select";
 import { UPDATE_AUTHOR } from "../queries";
 
-const Authors = ({ authors }) => {
+const Authors = ({ authors, setPage }) => {
   const [name, setName] = useState(null);
   const [born, setBorn] = useState("");
 
@@ -15,6 +15,8 @@ const Authors = ({ authors }) => {
     setName(null);
     setBorn("");
   };
+
+  const loggedIn = localStorage.getItem("logged-in-user-token");
 
   return (
     <div>
@@ -35,28 +37,38 @@ const Authors = ({ authors }) => {
           ))}
         </tbody>
       </table>
-      <h3>Set birthyear</h3>
-      <div>
-        <form onSubmit={submit}>
-          name
-          <Select
-            defaultValue={name}
-            onChange={(choice) => setName(choice.value)}
-            options={authors.map((a) => {
-              return { value: a.name, label: a.name };
-            })}
-          />
-          <br />
-          born
-          <input
-            type='number'
-            value={born}
-            onChange={({ target }) => setBorn(target.value)}
-          ></input>
-          <br />
-          <button type='submit'>update author</button>
-        </form>
-      </div>
+
+      {loggedIn ? (
+        <div>
+          <h3>Set birthyear</h3>
+          <form onSubmit={submit}>
+            name
+            <Select
+              defaultValue={name}
+              onChange={(choice) => setName(choice.value)}
+              options={authors.map((a) => {
+                return { value: a.name, label: a.name };
+              })}
+            />
+            <br />
+            born
+            <input
+              type='number'
+              value={born}
+              onChange={({ target }) => setBorn(target.value)}
+            ></input>
+            <br />
+            <button type='submit'>update author</button>
+          </form>
+        </div>
+      ) : (
+        <div>
+          Log in to edit authors
+          <button type='button' onClick={() => setPage("login")}>
+            login
+          </button>
+        </div>
+      )}
     </div>
   );
 };

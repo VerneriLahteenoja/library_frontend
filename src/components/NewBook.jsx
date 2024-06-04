@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { ADD_BOOK } from "../queries";
 
-const NewBook = () => {
+const NewBook = ({ setPage }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [published, setPublished] = useState("");
@@ -31,6 +31,19 @@ const NewBook = () => {
     setGenres(genres.concat(genre));
     setGenre("");
   };
+
+  const loggedIn = localStorage.getItem("logged-in-user-token");
+
+  if (!loggedIn) {
+    return (
+      <div>
+        Log in to add books
+        <button type='button' onClick={() => setPage("login")}>
+          login
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useApolloClient, useQuery } from "@apollo/client";
 import Authors from "./components/Authors";
 import Books from "./components/Books";
@@ -16,6 +16,13 @@ const App = () => {
   const booksQuery = useQuery(ALL_BOOKS, {
     pollInterval: 2000,
   });
+
+  useEffect(() => {
+    const loggedIn = localStorage.getItem("logged-in-user-token");
+    if (loggedIn) {
+      setToken(loggedIn);
+    }
+  }, []);
 
   const client = useApolloClient();
 
@@ -41,11 +48,13 @@ const App = () => {
           <button onClick={() => logout()}>log out</button>
         )}
       </div>
-      {page === "authors" && <Authors authors={result.data.allAuthors} />}
+      {page === "authors" && (
+        <Authors authors={result.data.allAuthors} setPage={setPage} />
+      )}
 
       {page === "books" && <Books books={booksQuery.data.allBooks} />}
 
-      {page === "add" && <NewBook />}
+      {page === "add" && <NewBook setPage={setPage} />}
 
       {page === "login" && <LoginForm setPage={setPage} setToken={setToken} />}
     </div>
