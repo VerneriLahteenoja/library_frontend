@@ -4,7 +4,7 @@ import Authors from "./components/Authors";
 import Books from "./components/Books";
 import NewBook from "./components/NewBook";
 import LoginForm from "./components/LoginForm";
-import { ALL_AUTHORS, ALL_BOOKS } from "./queries";
+import { ALL_AUTHORS, ALL_BOOKS, ALL_GENRES } from "./queries";
 
 const App = () => {
   const [page, setPage] = useState("authors");
@@ -14,6 +14,9 @@ const App = () => {
     pollInterval: 2000,
   });
   const booksQuery = useQuery(ALL_BOOKS, {
+    pollInterval: 2000,
+  });
+  const genresQuery = useQuery(ALL_GENRES, {
     pollInterval: 2000,
   });
 
@@ -32,7 +35,7 @@ const App = () => {
     client.resetStore();
   };
 
-  if (result.loading || booksQuery.loading) {
+  if (result.loading || booksQuery.loading || genresQuery.loading) {
     return <div>loading...</div>;
   }
 
@@ -52,7 +55,12 @@ const App = () => {
         <Authors authors={result.data.allAuthors} setPage={setPage} />
       )}
 
-      {page === "books" && <Books books={booksQuery.data.allBooks} />}
+      {page === "books" && (
+        <Books
+          books={booksQuery.data.allBooks}
+          genres={genresQuery.data.allGenres}
+        />
+      )}
 
       {page === "add" && <NewBook setPage={setPage} />}
 
