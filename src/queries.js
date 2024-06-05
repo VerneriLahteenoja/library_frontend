@@ -20,9 +20,15 @@ export const ALL_BOOKS = gql`
 				born
 			}
 			published
+			genres
 		}
 	}
 `;
+
+export const ALL_GENRES = gql`
+	query {
+		allGenres
+	}`
 
 export const ADD_BOOK = gql`
 	mutation createBook($title: String!, $published: Int!, $author: String!, $genres: [String!]!)
