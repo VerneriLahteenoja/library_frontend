@@ -3,15 +3,13 @@ import { useState } from "react";
 const Books = ({ books, genres }) => {
   const [showBooks, setShowBooks] = useState([...books]);
 
-  const handleGenreChoice = async (genre) => {
+  const handleGenreChoice = (genre) => {
     if (genre == "ALL_GENRES") {
       setShowBooks([...books]);
     } else {
       setShowBooks(books.filter((b) => b.genres.includes(genre)));
     }
   };
-
-  //TODO: show only books matching genre selection
 
   return (
     <div>
@@ -24,7 +22,7 @@ const Books = ({ books, genres }) => {
             <th>author</th>
             <th>published</th>
           </tr>
-          {books.map((a) => (
+          {showBooks.map((a) => (
             <tr key={a.title}>
               <td>{a.title}</td>
               <td>{a.author.name}</td>

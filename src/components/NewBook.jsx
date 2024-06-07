@@ -17,7 +17,7 @@ const NewBook = ({ setPage }) => {
     console.log("add book...");
 
     createBook({
-      variables: { title, author, published: Number(published), genres },
+      variables: { title, published: Number(published), author, genres },
     });
 
     setTitle("");
