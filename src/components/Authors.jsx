@@ -1,13 +1,19 @@
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import Select from "react-select";
-import { UPDATE_AUTHOR } from "../queries";
+import { ALL_AUTHORS, UPDATE_AUTHOR } from "../queries";
 
 const Authors = ({ authors, setPage }) => {
   const [name, setName] = useState(null);
   const [born, setBorn] = useState("");
 
-  const [changeBorn] = useMutation(UPDATE_AUTHOR);
+  const [changeBorn] = useMutation(UPDATE_AUTHOR, {
+    refetchQueries: [{ query: ALL_AUTHORS }],
+    onError: (error) => {
+      const message = error.graphQLErrors((e) => e.message.join("\n"));
+      console.log(message);
+    },
+  });
 
   const submit = (event) => {
     event.preventDefault();

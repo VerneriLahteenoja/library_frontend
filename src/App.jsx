@@ -10,12 +10,8 @@ const App = () => {
   const [page, setPage] = useState("authors");
   const [token, setToken] = useState(null);
 
-  const result = useQuery(ALL_AUTHORS, {
-    pollInterval: 2000,
-  });
-  const booksQuery = useQuery(ALL_BOOKS, {
-    pollInterval: 2000,
-  });
+  const result = useQuery(ALL_AUTHORS);
+  const booksQuery = useQuery(ALL_BOOKS);
   const genresQuery = useQuery(ALL_GENRES, {
     pollInterval: 2000,
   });
