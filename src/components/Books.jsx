@@ -1,46 +1,59 @@
+import { useQuery } from "@apollo/client";
 import { useState } from "react";
+import { BOOKS_BY_GENRE } from "../queries";
 
 const Books = ({ books, genres }) => {
-  const [showBooks, setShowBooks] = useState([...books]);
+  const [genreChoice, setGenreChoice] = useState("");
 
-  const handleGenreChoice = (genre) => {
-    if (genre == "ALL_GENRES") {
-      setShowBooks([...books]);
-    } else {
-      setShowBooks(books.filter((b) => b.genres.includes(genre)));
-    }
-  };
+  const { data, loading } = useQuery(BOOKS_BY_GENRE, {
+    variables: { genre: genreChoice },
+    skip: !genreChoice,
+  });
+
+  const booksTable = (booksToRender) => (
+    <table>
+      <thead>
+        <tr>
+          <th>Author</th>
+          <th>Published</th>
+        </tr>
+      </thead>
+      <tbody>
+        {booksToRender.map((book) => (
+          <tr key={book.title}>
+            <td>{book.title}</td>
+            <td>{book.author.name}</td>
+            <td>{book.published}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+
+  const renderGenreButtons = () => (
+    <div>
+      {genres.map((genre) => (
+        <button key={genre} type='button' onClick={() => setGenreChoice(genre)}>
+          {genre}
+        </button>
+      ))}
+      <button type='button' onClick={() => setGenreChoice("")}>
+        Show All
+      </button>
+    </div>
+  );
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  const booksToShow = genreChoice && data ? data.booksByGenre : books;
 
   return (
     <div>
-      <h2>books</h2>
-
-      <table>
-        <tbody>
-          <tr>
-            <th></th>
-            <th>author</th>
-            <th>published</th>
-          </tr>
-          {showBooks.map((a) => (
-            <tr key={a.title}>
-              <td>{a.title}</td>
-              <td>{a.author.name}</td>
-              <td>{a.published}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <div>
-        {genres.map((g) => (
-          <button key={g} type='button' onClick={() => handleGenreChoice(g)}>
-            {g}
-          </button>
-        ))}
-        <button type='button' onClick={() => handleGenreChoice("ALL_GENRES")}>
-          show all
-        </button>
-      </div>
+      <h2>Books</h2>
+      {booksTable(booksToShow)}
+      {renderGenreButtons()}
     </div>
   );
 };
