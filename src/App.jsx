@@ -4,6 +4,7 @@ import Authors from "./components/Authors";
 import Books from "./components/Books";
 import NewBook from "./components/NewBook";
 import LoginForm from "./components/LoginForm";
+import Recommended from "./components/Recommended";
 import { ALL_AUTHORS, ALL_BOOKS, ALL_GENRES } from "./queries";
 
 const App = () => {
@@ -44,7 +45,10 @@ const App = () => {
         {!token ? (
           <button onClick={() => setPage("login")}>login</button>
         ) : (
-          <button onClick={() => logout()}>log out</button>
+          <>
+            <button onClick={() => logout()}>log out</button>
+            <button onClick={() => setPage("recommended")}>recommended</button>
+          </>
         )}
       </div>
       {page === "authors" && (
@@ -61,6 +65,8 @@ const App = () => {
       {page === "add" && <NewBook setPage={setPage} />}
 
       {page === "login" && <LoginForm setPage={setPage} setToken={setToken} />}
+
+      {page === "recommended" && <Recommended />}
     </div>
   );
 };
