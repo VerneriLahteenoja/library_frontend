@@ -28,6 +28,7 @@ const App = () => {
 
   const logout = () => {
     setToken(null);
+    setPage("authors");
     localStorage.clear();
     client.resetStore();
   };
