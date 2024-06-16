@@ -1,20 +1,29 @@
 import { useEffect, useState } from "react";
-import { useApolloClient, useQuery } from "@apollo/client";
+import { useApolloClient, useQuery, useSubscription } from "@apollo/client";
 import Authors from "./components/Authors";
 import Books from "./components/Books";
 import NewBook from "./components/NewBook";
 import LoginForm from "./components/LoginForm";
 import Recommended from "./components/Recommended";
-import { ALL_AUTHORS, ALL_BOOKS, ALL_GENRES } from "./queries";
+import { ALL_AUTHORS, ALL_BOOKS, ALL_GENRES, BOOK_ADDED } from "./queries";
+
+import { updateCache } from "./updateCache";
 
 const App = () => {
   const [page, setPage] = useState("authors");
   const [token, setToken] = useState(null);
 
-  const result = useQuery(ALL_AUTHORS);
+  const authorQuery = useQuery(ALL_AUTHORS);
   const booksQuery = useQuery(ALL_BOOKS);
   const genresQuery = useQuery(ALL_GENRES, {
     pollInterval: 2000,
+  });
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data }) => {
+      const addedBook = data.data.bookAdded;
+      updateCache(client.cache, { query: ALL_BOOKS }, addedBook);
+    },
   });
 
   useEffect(() => {
@@ -33,7 +42,7 @@ const App = () => {
     client.resetStore();
   };
 
-  if (result.loading || booksQuery.loading || genresQuery.loading) {
+  if (authorQuery.loading || booksQuery.loading || genresQuery.loading) {
     return <div>loading...</div>;
   }
 
@@ -53,7 +62,7 @@ const App = () => {
         )}
       </div>
       {page === "authors" && (
-        <Authors authors={result.data.allAuthors} setPage={setPage} />
+        <Authors authors={authorQuery.data.allAuthors} setPage={setPage} />
       )}
 
       {page === "books" && (
